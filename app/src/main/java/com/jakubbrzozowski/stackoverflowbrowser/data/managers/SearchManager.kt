@@ -44,6 +44,6 @@ constructor(private val apiService: ApiService) {
     fun searchQuestions(q: String): Single<List<Question?>?> {
         pageCounter = STARTING_PAGE
         searchResults.clear()
-        return searchQuestions(q, 0)
+        return searchQuestions(q, STARTING_PAGE)
     }
 }
