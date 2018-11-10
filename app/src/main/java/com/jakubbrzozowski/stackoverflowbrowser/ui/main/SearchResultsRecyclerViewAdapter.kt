@@ -32,7 +32,7 @@ class SearchResultsRecyclerViewAdapter(items: List<Question?>) :
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         fun bind(question: Question) {
-            view.name.text = question.title
+            view.question_title.text = question.title
         }
     }
 }
