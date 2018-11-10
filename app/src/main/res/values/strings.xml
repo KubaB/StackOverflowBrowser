@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">StackOverflow Browser</string>
+    <string name="cont_desc_user_avatar">User\'s avatar</string>
+    <string name="question_answers_count">Answers: %d</string>
 </resources>

@@ -2,6 +2,7 @@ package com.jakubbrzozowski.stackoverflowbrowser.injection.component
 
 import android.app.Application
 import android.content.Context
+import com.jakubbrzozowski.stackoverflowbrowser.data.managers.SearchManager
 import com.jakubbrzozowski.stackoverflowbrowser.data.remote.ApiService
 import com.jakubbrzozowski.stackoverflowbrowser.injection.module.ApiModule
 import com.jakubbrzozowski.stackoverflowbrowser.injection.module.ApplicationModule
@@ -20,6 +21,7 @@ interface ApplicationComponent {
 
     fun application(): Application
     fun apiService(): ApiService
+    fun searchManager(): SearchManager
     @MainScheduler
     fun scheduler(): Scheduler
 }
