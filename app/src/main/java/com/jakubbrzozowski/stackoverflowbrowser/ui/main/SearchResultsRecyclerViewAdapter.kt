@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.jakubbrzozowski.stackoverflowbrowser.R
 import com.jakubbrzozowski.stackoverflowbrowser.data.model.Question
-import kotlinx.android.synthetic.main.item_main.view.*
+import kotlinx.android.synthetic.main.item_question.view.*
 
 class SearchResultsRecyclerViewAdapter(items: List<Question?>) :
         RecyclerView.Adapter<SearchResultsRecyclerViewAdapter.ViewHolder>() {
@@ -18,7 +18,7 @@ class SearchResultsRecyclerViewAdapter(items: List<Question?>) :
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_main, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_question, parent, false)
         return ViewHolder(view)
     }
 
