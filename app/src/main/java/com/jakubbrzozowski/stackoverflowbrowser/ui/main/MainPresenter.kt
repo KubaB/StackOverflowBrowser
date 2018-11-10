@@ -25,4 +25,12 @@ constructor(private val searchManager: SearchManager,
                                     { ex -> Timber.e(ex) }))
         }
     }
+
+    fun questionClicked(questionId: Int?) {
+
+    }
+
+    fun endOfListReached() {
+
+    }
 }

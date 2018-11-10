@@ -9,7 +9,9 @@ import com.jakubbrzozowski.stackoverflowbrowser.data.model.Question
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_question.view.*
 
-class SearchResultsRecyclerViewAdapter(items: List<Question?>) :
+class SearchResultsRecyclerViewAdapter(items: List<Question?>,
+                                       private val questionClickListener: (Int?) -> Unit,
+                                       private val endOfListReachedListener: () -> Unit) :
         RecyclerView.Adapter<SearchResultsRecyclerViewAdapter.ViewHolder>() {
 
     var items: List<Question?> = items
@@ -28,11 +30,14 @@ class SearchResultsRecyclerViewAdapter(items: List<Question?>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        items[position]?.let { holder.bind(it) }
+        items[position]?.let { holder.bind(it, questionClickListener) }
+        if (position == (items.size - 2)) {
+            endOfListReachedListener()
+        }
     }
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(question: Question) {
+        fun bind(question: Question, questionClickListener: (Int?) -> Unit) {
             view.questionTitle.text = question.title
             view.answersCount.text = view.context.resources.getString(
                     R.string.question_answers_count, question.answerCount)
@@ -44,6 +49,7 @@ class SearchResultsRecyclerViewAdapter(items: List<Question?>) :
                             .into(view.userAvatar)
                 }
             }
+            view.setOnClickListener { questionClickListener(question.questionId) }
         }
     }
 }

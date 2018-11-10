@@ -14,7 +14,9 @@ class MainActivity : BaseActivity(), MainView {
     @Inject
     lateinit var presenter: MainPresenter
     private var recyclerViewAdapter: SearchResultsRecyclerViewAdapter =
-            SearchResultsRecyclerViewAdapter(Collections.emptyList())
+            SearchResultsRecyclerViewAdapter(Collections.emptyList(),
+                    { presenter.questionClicked(it) },
+                    { presenter.endOfListReached() })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
