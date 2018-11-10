@@ -12,7 +12,7 @@ interface ApiService {
         const val URL = "http://api.stackexchange.com/$API_VERSION/"
     }
 
-    @GET("/search")
+    @GET("search")
     fun searchQuestions(
             @Query("intitle") intitle: String,
             @Query("site") site: String,
