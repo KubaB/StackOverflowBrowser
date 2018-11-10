@@ -13,7 +13,7 @@ interface ApiService {
     }
 
     @GET("/search")
-    fun searchRepositories(
+    fun searchQuestions(
             @Query("intitle") intitle: String,
             @Query("site") site: String,
             @Query("page") page: Int
