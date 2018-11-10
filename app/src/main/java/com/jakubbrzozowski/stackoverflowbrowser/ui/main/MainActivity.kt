@@ -1,11 +1,13 @@
 package com.jakubbrzozowski.stackoverflowbrowser.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import com.jakubbrzozowski.stackoverflowbrowser.R
 import com.jakubbrzozowski.stackoverflowbrowser.data.model.Question
 import com.jakubbrzozowski.stackoverflowbrowser.ui.base.BaseActivity
+import com.jakubbrzozowski.stackoverflowbrowser.ui.questiondetails.QuestionDetailsActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import javax.inject.Inject
@@ -52,6 +54,12 @@ class MainActivity : BaseActivity(), MainView {
 
     override fun showQuestions(questions: List<Question?>) {
         recyclerViewAdapter.items = questions
+    }
+
+    override fun openQuestionDetails(questionId: Int) {
+        val intent = Intent(this, QuestionDetailsActivity::class.java)
+        intent.putExtra(QuestionDetailsActivity.QUESTION_ID_KEY, questionId)
+        startActivity(intent)
     }
 
     override fun getQueryString(): String {

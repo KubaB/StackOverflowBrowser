@@ -10,6 +10,10 @@ interface ApiService {
     companion object {
         private const val API_VERSION = "2.2"
         const val URL = "http://api.stackexchange.com/$API_VERSION/"
+        private const val QUESTION_URL = "https://stackoverflow.com/questions/"
+        fun getQuestionUrl(questionId: Int): String {
+            return QUESTION_URL + questionId
+        }
     }
 
     @GET("search")
