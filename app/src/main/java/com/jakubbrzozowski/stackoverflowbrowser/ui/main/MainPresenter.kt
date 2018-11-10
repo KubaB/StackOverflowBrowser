@@ -27,7 +27,7 @@ constructor(private val searchManager: SearchManager,
     }
 
     fun questionClicked(questionId: Int?) {
-
+        questionId?.let { view.openQuestionDetails(it) }
     }
 
     fun endOfListReached() {
