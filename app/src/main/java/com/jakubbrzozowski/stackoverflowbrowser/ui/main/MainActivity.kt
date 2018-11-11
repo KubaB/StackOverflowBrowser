@@ -45,6 +45,7 @@ class MainActivity : BaseActivity(), MainView {
     private fun setupMainRecycler() {
         mainRecycler.layoutManager = LinearLayoutManager(this)
         mainRecycler.adapter = recyclerViewAdapter
+        mainSwipeRefresh.setOnRefreshListener { presenter.onRefresh() }
     }
 
     override fun onDestroy() {
@@ -64,5 +65,9 @@ class MainActivity : BaseActivity(), MainView {
 
     override fun getQueryString(): String {
         return searchView.query.toString()
+    }
+
+    override fun showRefreshing(show: Boolean) {
+        mainSwipeRefresh.isRefreshing = show
     }
 }

@@ -6,6 +6,7 @@ import com.jakubbrzozowski.stackoverflowbrowser.injection.scope.ConfigPersistent
 import com.jakubbrzozowski.stackoverflowbrowser.ui.base.BasePresenter
 import io.reactivex.Scheduler
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 @ConfigPersistent
@@ -21,9 +22,25 @@ constructor(private val searchManager: SearchManager,
                     searchManager.searchQuestions(searchQuery.toString())
                             .observeOn(mainScheduler)
                             .subscribe(
-                                    { list -> list?.let { view.showQuestions(it) } },
-                                    { ex -> Timber.e(ex) }))
+                                    { list ->
+                                        list?.let {
+                                            view.showQuestions(it)
+                                            view.showRefreshing(false)
+                                        }
+                                    },
+                                    { ex ->
+                                        view.showRefreshing(false)
+                                        Timber.e(ex)
+                                    }))
+        } else {
+            view.showQuestions(Collections.emptyList())
+            view.showRefreshing(false)
         }
+    }
+
+    fun onRefresh() {
+        view.showRefreshing(true)
+        searchFieldChanged(view.getQueryString())
     }
 
     fun questionClicked(questionId: Int?) {
