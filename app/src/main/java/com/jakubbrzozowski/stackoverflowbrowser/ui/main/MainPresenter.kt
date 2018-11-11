@@ -1,5 +1,6 @@
 package com.jakubbrzozowski.stackoverflowbrowser.ui.main
 
+import com.jakubbrzozowski.stackoverflowbrowser.R
 import com.jakubbrzozowski.stackoverflowbrowser.data.managers.SearchManager
 import com.jakubbrzozowski.stackoverflowbrowser.data.model.remote.Question
 import com.jakubbrzozowski.stackoverflowbrowser.injection.qualifier.MainScheduler
@@ -39,6 +40,7 @@ constructor(private val searchManager: SearchManager,
                                     },
                                     { ex ->
                                         view.showRefreshing(false)
+                                        view.showError(R.string.err_data_loading)
                                         Timber.e(ex)
                                     }))
         } else {
