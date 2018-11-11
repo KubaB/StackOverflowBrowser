@@ -26,17 +26,24 @@ constructor(private val searchManager: SearchManager,
     }
 
     fun searchFieldChanged(searchQuery: String?) {
+        if (lastQueryText == searchQuery.toString()) {
+            view.showRefreshing(false)
+        } else {
+            lastQueryText = searchQuery.toString()
+            reloadSearchResults(searchQuery)
+        }
+    }
+
+    private fun reloadSearchResults(searchQuery: String?) {
         if (!searchQuery.isNullOrBlank()) {
             subsciprtions.clear()
             subsciprtions.add(
                     searchManager.searchQuestions(searchQuery)
                             .observeOn(mainScheduler)
                             .subscribe(
-                                    { list ->
-                                        list?.let {
-                                            showQuestions(it, searchQuery)
-                                            view.showRefreshing(false)
-                                        }
+                                    { it ->
+                                        showQuestions(it)
+                                        view.showRefreshing(false)
                                     },
                                     { ex ->
                                         view.showRefreshing(false)
@@ -44,20 +51,21 @@ constructor(private val searchManager: SearchManager,
                                         Timber.e(ex)
                                     }))
         } else {
-            showQuestions(Collections.emptyList(), searchQuery.toString())
+            showQuestions(Collections.emptyList())
             view.showRefreshing(false)
         }
     }
 
-    private fun showQuestions(questions: List<Question?>, queryText: String) {
-        lastQuestionsList = questions
-        if (lastQueryText != queryText) view.showQuestions(questions)
-        lastQueryText = queryText
+    private fun showQuestions(questions: List<Question?>?) {
+        questions?.let {
+            lastQuestionsList = it
+            view.showQuestions(it)
+        }
     }
 
     fun onRefresh() {
         view.showRefreshing(true)
-        searchFieldChanged(view.getQueryString())
+        reloadSearchResults(view.getQueryString())
     }
 
     fun questionClicked(questionId: Int?) {
