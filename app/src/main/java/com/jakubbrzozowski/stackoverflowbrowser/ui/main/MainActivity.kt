@@ -2,6 +2,7 @@ package com.jakubbrzozowski.stackoverflowbrowser.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import com.jakubbrzozowski.stackoverflowbrowser.R
@@ -13,6 +14,10 @@ import java.util.*
 import javax.inject.Inject
 
 class MainActivity : BaseActivity(), MainView {
+    companion object {
+        private const val RECYCLER_STATE_KEY = "recycler_state"
+    }
+
     @Inject
     lateinit var presenter: MainPresenter
     private var recyclerViewAdapter: SearchResultsRecyclerViewAdapter =
@@ -26,7 +31,7 @@ class MainActivity : BaseActivity(), MainView {
         setContentView(R.layout.activity_main)
         presenter.attachView(this)
         setupSearchView()
-        setupMainRecycler()
+        setupMainRecycler(savedInstanceState)
     }
 
     private fun setupSearchView() {
@@ -42,9 +47,11 @@ class MainActivity : BaseActivity(), MainView {
         })
     }
 
-    private fun setupMainRecycler() {
+    private fun setupMainRecycler(savedInstanceState: Bundle?) {
         mainRecycler.layoutManager = LinearLayoutManager(this)
         mainRecycler.adapter = recyclerViewAdapter
+        val state: Parcelable? = savedInstanceState?.getParcelable(RECYCLER_STATE_KEY)
+        mainRecycler.layoutManager?.onRestoreInstanceState(state)
         mainSwipeRefresh.setOnRefreshListener { presenter.onRefresh() }
     }
 
@@ -69,5 +76,11 @@ class MainActivity : BaseActivity(), MainView {
 
     override fun showRefreshing(show: Boolean) {
         mainSwipeRefresh.isRefreshing = show
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        val recyclerState = mainRecycler.layoutManager?.onSaveInstanceState()
+        outState.putParcelable(RECYCLER_STATE_KEY, recyclerState)
+        super.onSaveInstanceState(outState)
     }
 }
