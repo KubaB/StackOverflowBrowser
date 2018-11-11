@@ -8,4 +8,5 @@ interface MainView : MvpView {
     fun getQueryString(): String
     fun showQuestions(questions: List<Question?>)
     fun openQuestionDetails(questionId: Int)
+    fun showRefreshing(show: Boolean)
 }
