@@ -33,6 +33,7 @@ constructor(private val searchManager: SearchManager,
                                         Timber.e(ex)
                                     }))
         } else {
+            view.showQuestions(Collections.emptyList())
             view.showRefreshing(false)
         }
     }
