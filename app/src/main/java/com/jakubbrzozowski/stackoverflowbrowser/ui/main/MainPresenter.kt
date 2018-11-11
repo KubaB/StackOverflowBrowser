@@ -23,41 +23,49 @@ constructor(private val searchManager: SearchManager,
     override fun attachView(view: MainView) {
         super.attachView(view)
         view.showQuestions(lastQuestionsList)
+        subsciprtions.add(searchManager.searchResults
+                .observeOn(mainScheduler)
+                .subscribe(
+                        { it ->
+                            showQuestions(it)
+                            view.showRefreshing(false)
+                        },
+                        { ex ->
+                            view.showRefreshing(false)
+                            view.showError(R.string.err_data_loading)
+                            Timber.e(ex)
+                        }))
     }
 
     fun searchFieldChanged(searchQuery: String?) {
-        if (!searchQuery.isNullOrBlank()) {
-            subsciprtions.clear()
-            subsciprtions.add(
-                    searchManager.searchQuestions(searchQuery)
-                            .observeOn(mainScheduler)
-                            .subscribe(
-                                    { list ->
-                                        list?.let {
-                                            showQuestions(it, searchQuery)
-                                            view.showRefreshing(false)
-                                        }
-                                    },
-                                    { ex ->
-                                        view.showRefreshing(false)
-                                        view.showError(R.string.err_data_loading)
-                                        Timber.e(ex)
-                                    }))
+        if (lastQueryText == searchQuery.toString()) {
+            view.showRefreshing(false)
         } else {
-            showQuestions(Collections.emptyList(), searchQuery.toString())
+            lastQueryText = searchQuery.toString()
+            reloadSearchResults(searchQuery)
+        }
+    }
+
+    private fun reloadSearchResults(searchQuery: String?) {
+        if (!searchQuery.isNullOrBlank()) {
+            searchManager.newQuestionSearch(searchQuery)
+
+        } else {
+            showQuestions(Collections.emptyList())
             view.showRefreshing(false)
         }
     }
 
-    private fun showQuestions(questions: List<Question?>, queryText: String) {
-        lastQuestionsList = questions
-        if (lastQueryText != queryText) view.showQuestions(questions)
-        lastQueryText = queryText
+    private fun showQuestions(questions: List<Question?>?) {
+        questions?.let {
+            lastQuestionsList = it
+            view.showQuestions(it)
+        }
     }
 
     fun onRefresh() {
         view.showRefreshing(true)
-        searchFieldChanged(view.getQueryString())
+        reloadSearchResults(view.getQueryString())
     }
 
     fun questionClicked(questionId: Int?) {
@@ -65,6 +73,9 @@ constructor(private val searchManager: SearchManager,
     }
 
     fun endOfListReached() {
-
+        val queryString = view.getQueryString()
+        if (!queryString.isBlank()) {
+            searchManager.loadNextPage(queryString)
+        }
     }
 }
