@@ -55,6 +55,12 @@ class MainActivity : BaseActivity(), MainView {
         mainSwipeRefresh.setOnRefreshListener { presenter.onRefresh() }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        val recyclerState = mainRecycler.layoutManager?.onSaveInstanceState()
+        outState.putParcelable(RECYCLER_STATE_KEY, recyclerState)
+        super.onSaveInstanceState(outState)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         presenter.detachView()
@@ -78,9 +84,4 @@ class MainActivity : BaseActivity(), MainView {
         mainSwipeRefresh.isRefreshing = show
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        val recyclerState = mainRecycler.layoutManager?.onSaveInstanceState()
-        outState.putParcelable(RECYCLER_STATE_KEY, recyclerState)
-        super.onSaveInstanceState(outState)
-    }
 }
