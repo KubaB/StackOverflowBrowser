@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jakubbrzozowski.stackoverflowbrowser.R
-import com.jakubbrzozowski.stackoverflowbrowser.data.model.Question
+import com.jakubbrzozowski.stackoverflowbrowser.data.model.remote.Question
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_question.view.*
 

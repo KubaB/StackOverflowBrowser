@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import com.jakubbrzozowski.stackoverflowbrowser.R
-import com.jakubbrzozowski.stackoverflowbrowser.data.model.Question
+import com.jakubbrzozowski.stackoverflowbrowser.data.model.remote.Question
 import com.jakubbrzozowski.stackoverflowbrowser.ui.base.BaseActivity
 import com.jakubbrzozowski.stackoverflowbrowser.ui.questiondetails.QuestionDetailsActivity
 import kotlinx.android.synthetic.main.activity_main.*

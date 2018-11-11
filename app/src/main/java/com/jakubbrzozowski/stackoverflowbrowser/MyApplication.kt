@@ -4,6 +4,8 @@ import android.app.Application
 import com.jakubbrzozowski.stackoverflowbrowser.injection.component.ApplicationComponent
 import com.jakubbrzozowski.stackoverflowbrowser.injection.component.DaggerApplicationComponent
 import com.jakubbrzozowski.stackoverflowbrowser.injection.module.ApplicationModule
+import io.realm.Realm
+import io.realm.RealmConfiguration
 import timber.log.Timber
 
 class MyApplication : Application() {
@@ -18,5 +20,14 @@ class MyApplication : Application() {
         applicationComponent = DaggerApplicationComponent.builder()
                 .applicationModule(ApplicationModule(this))
                 .build()
+        setupRealm()
+    }
+
+    private fun setupRealm() {
+        Realm.init(this)
+        val config = RealmConfiguration.Builder()
+                .deleteRealmIfMigrationNeeded()
+                .build()
+        Realm.setDefaultConfiguration(config)
     }
 }

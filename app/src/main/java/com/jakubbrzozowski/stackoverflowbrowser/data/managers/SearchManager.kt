@@ -1,7 +1,8 @@
 package com.jakubbrzozowski.stackoverflowbrowser.data.managers
 
-import com.jakubbrzozowski.stackoverflowbrowser.data.model.Question
+import com.jakubbrzozowski.stackoverflowbrowser.data.model.remote.Question
 import com.jakubbrzozowski.stackoverflowbrowser.data.remote.ApiService
+import com.jakubbrzozowski.stackoverflowbrowser.data.repository.QuestionsRepository
 import com.jakubbrzozowski.stackoverflowbrowser.utils.PositionAndCount
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
@@ -12,7 +13,8 @@ import javax.inject.Singleton
 
 @Singleton
 class SearchManager @Inject
-constructor(private val apiService: ApiService) {
+constructor(private val apiService: ApiService,
+            private val questionsRepository: QuestionsRepository) {
     companion object {
         const val DEFAULT_SITE = "stackoverflow"
         const val STARTING_PAGE = 1
@@ -26,7 +28,7 @@ constructor(private val apiService: ApiService) {
             val lastPosition = searchResults.size - 1
             searchQuestions(q, ++pageCounter)
                     .subscribe(
-                            { _ ->
+                            {
                                 emitter.onSuccess(PositionAndCount(
                                         lastPosition,
                                         searchResults.size - lastPosition - 1))
@@ -37,7 +39,11 @@ constructor(private val apiService: ApiService) {
 
     private fun searchQuestions(q: String, page: Int): Single<List<Question?>?> {
         return apiService.searchQuestions(q, DEFAULT_SITE, page)
-                .map { questions -> questions.items }
+                .map { questions ->
+                    if (page == STARTING_PAGE) questionsRepository.deleteAllQuestions()
+                    questions.items?.let { questionsRepository.saveQuestions(it) }
+                    questionsRepository.getAllQuestions()
+                }
                 .subscribeOn(Schedulers.io())
     }
 
