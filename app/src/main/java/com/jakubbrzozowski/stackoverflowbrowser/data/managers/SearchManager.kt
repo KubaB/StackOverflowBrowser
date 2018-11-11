@@ -1,9 +1,10 @@
 package com.jakubbrzozowski.stackoverflowbrowser.data.managers
 
 import com.jakubbrzozowski.stackoverflowbrowser.data.model.remote.Question
-import io.reactivex.Single
+import io.reactivex.subjects.PublishSubject
 
 interface SearchManager {
-    fun searchQuestions(q: String): Single<List<Question?>?>
-    fun loadNextPage(q: String): Single<List<Question?>?>
+    val searchResults: PublishSubject<List<Question?>>
+    fun newQuestionSearch(q: String)
+    fun loadNextPage(q: String)
 }

@@ -23,6 +23,18 @@ constructor(private val searchManager: SearchManager,
     override fun attachView(view: MainView) {
         super.attachView(view)
         view.showQuestions(lastQuestionsList)
+        subsciprtions.add(searchManager.searchResults
+                .observeOn(mainScheduler)
+                .subscribe(
+                        { it ->
+                            showQuestions(it)
+                            view.showRefreshing(false)
+                        },
+                        { ex ->
+                            view.showRefreshing(false)
+                            view.showError(R.string.err_data_loading)
+                            Timber.e(ex)
+                        }))
     }
 
     fun searchFieldChanged(searchQuery: String?) {
@@ -36,20 +48,8 @@ constructor(private val searchManager: SearchManager,
 
     private fun reloadSearchResults(searchQuery: String?) {
         if (!searchQuery.isNullOrBlank()) {
-            subsciprtions.clear()
-            subsciprtions.add(
-                    searchManager.searchQuestions(searchQuery)
-                            .observeOn(mainScheduler)
-                            .subscribe(
-                                    { it ->
-                                        showQuestions(it)
-                                        view.showRefreshing(false)
-                                    },
-                                    { ex ->
-                                        view.showRefreshing(false)
-                                        view.showError(R.string.err_data_loading)
-                                        Timber.e(ex)
-                                    }))
+            searchManager.newQuestionSearch(searchQuery)
+
         } else {
             showQuestions(Collections.emptyList())
             view.showRefreshing(false)
@@ -75,12 +75,7 @@ constructor(private val searchManager: SearchManager,
     fun endOfListReached() {
         val queryString = view.getQueryString()
         if (!queryString.isBlank()) {
-            subsciprtions.add(searchManager.loadNextPage(queryString)
-                    .observeOn(mainScheduler)
-                    .subscribe(
-                            { it -> showQuestions(it) },
-                            { ex -> Timber.e(ex) })
-            )
+            searchManager.loadNextPage(queryString)
         }
     }
 }
