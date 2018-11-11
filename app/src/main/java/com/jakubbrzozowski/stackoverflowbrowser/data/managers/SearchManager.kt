@@ -23,6 +23,12 @@ constructor(private val apiService: ApiService,
     private var searchResults: MutableList<Question?> = Collections.emptyList()
     private var pageCounter = STARTING_PAGE
 
+    fun searchQuestions(q: String): Single<List<Question?>?> {
+        pageCounter = STARTING_PAGE
+        searchResults.clear()
+        return searchQuestions(q, STARTING_PAGE)
+    }
+
     fun loadNextPage(q: String): Single<PositionAndCount> {
         return Single.create { emitter ->
             val lastPosition = searchResults.size - 1
@@ -45,11 +51,5 @@ constructor(private val apiService: ApiService,
                     questionsRepository.getAllQuestions()
                 }
                 .subscribeOn(Schedulers.io())
-    }
-
-    fun searchQuestions(q: String): Single<List<Question?>?> {
-        pageCounter = STARTING_PAGE
-        searchResults.clear()
-        return searchQuestions(q, STARTING_PAGE)
     }
 }
