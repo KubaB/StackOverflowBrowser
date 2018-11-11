@@ -1,4 +1,4 @@
-package com.jakubbrzozowski.stackoverflowbrowser.data.model
+package com.jakubbrzozowski.stackoverflowbrowser.data.model.remote
 
 import com.google.gson.annotations.SerializedName
 

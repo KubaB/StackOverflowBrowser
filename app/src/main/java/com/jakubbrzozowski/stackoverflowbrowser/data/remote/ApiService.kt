@@ -1,6 +1,6 @@
 package com.jakubbrzozowski.stackoverflowbrowser.data.remote
 
-import com.jakubbrzozowski.stackoverflowbrowser.data.model.Questions
+import com.jakubbrzozowski.stackoverflowbrowser.data.model.remote.Questions
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query

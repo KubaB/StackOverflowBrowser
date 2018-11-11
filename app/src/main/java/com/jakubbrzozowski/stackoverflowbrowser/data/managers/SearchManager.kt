@@ -1,6 +1,6 @@
 package com.jakubbrzozowski.stackoverflowbrowser.data.managers
 
-import com.jakubbrzozowski.stackoverflowbrowser.data.model.Question
+import com.jakubbrzozowski.stackoverflowbrowser.data.model.remote.Question
 import com.jakubbrzozowski.stackoverflowbrowser.data.remote.ApiService
 import com.jakubbrzozowski.stackoverflowbrowser.utils.PositionAndCount
 import io.reactivex.Single
