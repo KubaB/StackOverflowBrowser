@@ -73,6 +73,14 @@ constructor(private val searchManager: SearchManager,
     }
 
     fun endOfListReached() {
-
+        val queryString = view.getQueryString()
+        if (!queryString.isBlank()) {
+            subsciprtions.add(searchManager.loadNextPage(queryString)
+                    .observeOn(mainScheduler)
+                    .subscribe(
+                            { it -> showQuestions(it) },
+                            { ex -> Timber.e(ex) })
+            )
+        }
     }
 }

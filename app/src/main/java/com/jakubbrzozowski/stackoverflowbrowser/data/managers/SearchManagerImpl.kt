@@ -3,10 +3,8 @@ package com.jakubbrzozowski.stackoverflowbrowser.data.managers
 import com.jakubbrzozowski.stackoverflowbrowser.data.model.remote.Question
 import com.jakubbrzozowski.stackoverflowbrowser.data.remote.ApiService
 import com.jakubbrzozowski.stackoverflowbrowser.data.repository.QuestionsRepository
-import com.jakubbrzozowski.stackoverflowbrowser.utils.PositionAndCount
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -29,18 +27,8 @@ constructor(private val apiService: ApiService,
         return searchQuestions(q, STARTING_PAGE)
     }
 
-    override fun loadNextPage(q: String): Single<PositionAndCount> {
-        return Single.create { emitter ->
-            val lastPosition = searchResults.size - 1
-            searchQuestions(q, ++pageCounter)
-                    .subscribe(
-                            {
-                                emitter.onSuccess(PositionAndCount(
-                                        lastPosition,
-                                        searchResults.size - lastPosition - 1))
-                            },
-                            { ex -> Timber.e(ex) })
-        }
+    override fun loadNextPage(q: String): Single<List<Question?>?> {
+        return searchQuestions(q, ++pageCounter)
     }
 
     private fun searchQuestions(q: String, page: Int): Single<List<Question?>?> {
