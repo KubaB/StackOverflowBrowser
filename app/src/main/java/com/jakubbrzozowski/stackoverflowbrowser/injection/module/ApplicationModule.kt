@@ -2,6 +2,8 @@ package com.jakubbrzozowski.stackoverflowbrowser.injection.module
 
 import android.app.Application
 import android.content.Context
+import com.jakubbrzozowski.stackoverflowbrowser.data.repository.QuestionsRepository
+import com.jakubbrzozowski.stackoverflowbrowser.data.repository.QuestionsRepositoryImpl
 import com.jakubbrzozowski.stackoverflowbrowser.injection.qualifier.ApplicationContext
 import com.jakubbrzozowski.stackoverflowbrowser.injection.qualifier.MainScheduler
 import dagger.Module
@@ -33,4 +35,9 @@ class ApplicationModule(val application: Application) {
         return AndroidSchedulers.mainThread()
     }
 
+    @Provides
+    @Singleton
+    fun provideQuestionRepository(): QuestionsRepository {
+        return QuestionsRepositoryImpl()
+    }
 }
