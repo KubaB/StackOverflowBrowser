@@ -15,11 +15,15 @@ open class BasePresenter<T : MvpView> : BasePresenterInterface<T> {
 
     override fun attachView(view: T) {
         _view = view
-        allSubscriptions.forEach { it.clear() }
+        clearAllSubsciptions()
     }
 
     override fun detachView() {
         _view = null
+        clearAllSubsciptions()
+    }
+
+    private fun clearAllSubsciptions() {
         allSubscriptions.forEach { it.clear() }
     }
 }
