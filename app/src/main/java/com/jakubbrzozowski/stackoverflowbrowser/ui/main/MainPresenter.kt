@@ -23,6 +23,11 @@ constructor(private val searchManager: SearchManager,
     override fun attachView(view: MainView) {
         super.attachView(view)
         view.showQuestions(lastQuestionsList)
+        subscribeSearchResults()
+    }
+
+    private fun subscribeSearchResults() {
+        subsciprtions.clear()
         subsciprtions.add(searchManager.searchResults
                 .observeOn(mainScheduler)
                 .subscribe(
@@ -34,6 +39,7 @@ constructor(private val searchManager: SearchManager,
                             view.showRefreshing(false)
                             view.showError(R.string.err_data_loading)
                             Timber.e(ex)
+                            subscribeSearchResults()
                         }))
     }
 
