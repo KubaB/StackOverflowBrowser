@@ -20,7 +20,7 @@ constructor(private val apiService: ApiService,
         const val STARTING_PAGE = 1
     }
 
-    override val searchResults: PublishSubject<List<Question?>> = PublishSubject.create()
+    override var searchResults: PublishSubject<List<Question?>> = PublishSubject.create()
     private val subscriptions = CompositeDisposable()
     private var lastSearchResults: Questions? = null
     private var pageCounter = STARTING_PAGE
@@ -41,13 +41,21 @@ constructor(private val apiService: ApiService,
     private fun searchQuestions(q: String, page: Int) {
         subscriptions.add(apiService.searchQuestions(q, DEFAULT_SITE, page)
                 .map { questions ->
-                    lastSearchResults = questions
-                    if (page == STARTING_PAGE) questionsRepository.deleteAllQuestions()
-                    questions.items?.let { questionsRepository.saveQuestions(it) }
-                    questionsRepository.getAllQuestions()
-
+                    processSearchResults(questions, page)
                 }
                 .subscribeOn(Schedulers.io())
-                .subscribe(searchResults::onNext, searchResults::onError))
+                .subscribe(searchResults::onNext) { searchResultsError(it) })
+    }
+
+    private fun processSearchResults(questions: Questions, page: Int): List<Question?> {
+        lastSearchResults = questions
+        if (page == STARTING_PAGE) questionsRepository.deleteAllQuestions()
+        questions.items?.let { questionsRepository.saveQuestions(it) }
+        return questionsRepository.getAllQuestions()
+    }
+
+    private fun searchResultsError(t: Throwable) {
+        searchResults.onError(t)
+        searchResults = PublishSubject.create()
     }
 }
